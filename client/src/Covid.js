@@ -7,33 +7,22 @@
  * Copyright 2020 Adriano Rosa <https://adrianorosa.com>
  * ======================================================================== */
 import React, { useContext } from 'react';
-import Paper from '@material-ui/core/Paper';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
 import styled from 'styled-components';
+import Box from '@material-ui/core/Box';
+import Paper from '@material-ui/core/Paper';
+import { withStyles } from '@material-ui/core/styles';
+
+import { url } from './config';
+import Loader from './components/Loader';
+import useApiRequest from './hooks/useApiRequest';
+import LastUpdated from './components/LastUpdated';
+import { GlobalContext } from './context/GlobalState';
 import ChartLineCases from './components/ChartLineCases';
 import CounterCountry from './components/CounterCountry';
-import useApiRequest from './hooks/useApiRequest';
-import { GlobalContext } from './context/GlobalState';
 import ChartWorldCases from './components/ChartWorldCases';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import TextField from '@material-ui/core/TextField';
-import { countryToFlag } from './utils/helpers';
-import TableCountryList from './components/TableCountryList';
-import LastUpdated from './components/LastUpdated';
-import Box from '@material-ui/core/Box';
-import Loader from './components/Loader';
 import ResponsePending from './components/ResponsePending';
-import { url } from './config';
-
-const useStyles = makeStyles({
-  option: {
-    fontSize: 15,
-    '& > span': {
-      marginRight: 10,
-      fontSize: 18,
-    },
-  },
-});
+import TableCountryList from './components/TableCountryList';
+import SelectCountryAutoComplete from './components/SelectCountryAutoComplete';
 
 const PaperCustom = withStyles(theme => ({
   root: {
@@ -67,16 +56,13 @@ const ChartWrapper = styled.div`
 `;
 
 const Covid = () => {
-  const classes = useStyles();
   const { country, countries, handleCountryChange } = useContext(GlobalContext);
   const [counters, fetchCounters] = useApiRequest(
     url.api.counters(country.value)
   );
   const [chartDaily, fetchDaily] = useApiRequest('/api/daily.json');
   const [chartWorld, fetchWorld] = useApiRequest('/api/daily/world.json');
-  const [responseCountries, fetchDataCountries] = useApiRequest(
-    `/api/countries.json`
-  );
+  const [responseCountries, fetchDataCountries] = useApiRequest(`/api/countries.json`);
 
   if (!counters.status) {
     fetchCounters();
@@ -86,7 +72,7 @@ const Covid = () => {
     fetchDaily();
   }
 
-  if (!chartWorld.status && country.value !== 'BR') {
+  if (!chartWorld.status) {
     fetchWorld();
   }
 
@@ -125,37 +111,7 @@ const Covid = () => {
       </PageHeader>
 
       <Box component="div">
-        <Autocomplete
-          style={{ marginBottom: '1rem' }}
-          options={countries}
-          classes={{
-            option: classes.option,
-          }}
-          autoHighlight
-          onChange={(e, value) => selectCountry(value)}
-          getOptionLabel={option =>
-            // `${countryToFlag(option.value)} ${option.label} (${option.value})`
-            `${option.label} (${option.value})`
-          }
-          value={country}
-          renderOption={option => (
-            <React.Fragment>
-              <span>{countryToFlag(option.value)}</span>
-              {option.label} ({option.value})
-            </React.Fragment>
-          )}
-          renderInput={params => (
-            <TextField
-              {...params}
-              label="Selecionar País"
-              variant="outlined"
-              inputProps={{
-                ...params.inputProps,
-                autoComplete: 'new-password', // disable autocomplete and autofill
-              }}
-            />
-          )}
-        />
+        <SelectCountryAutoComplete country={country} countries={countries} handleChange={selectCountry}/>
       </Box>
 
       <Box mt={3}>
