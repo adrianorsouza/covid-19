@@ -202,6 +202,29 @@ const Covid = () => {
           </ChartWrapper>
         </PaperCustom>
       </Box>
+      <Box mt={10} className="text-center">
+        <p>
+          Dados oficiais atualizados constantemente de acordo com o sistema de controle de cada país.
+        </p>
+        <p>
+          <small>
+            Desenvolvido em NodeJS, React e PHP. Layout e BackEnd Wrapper API por{' '}
+            <a href="https://adrianorosa.com" title="Adriano Rosa" target="_blank" rel="noreferrer noopener">
+              Adriano Rosa
+            </a>
+            . Data sources fornecido pela Universidade Johns Hopkins University -
+            Systems Science and Engineering (CSSE), JSON API por{' '}
+            <a
+              href="https://covid19.mathdro.id"
+              title="Mohamed"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              Mustadi's.
+            </a>
+          </small>
+        </p>
+      </Box>
     </Wrapper>
   );
 };
