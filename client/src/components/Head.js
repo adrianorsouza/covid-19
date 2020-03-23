@@ -5,7 +5,7 @@ import { Helmet } from 'react-helmet';
 const Head = ({ siteName, title, description, robots, children }) => {
   return (
     <>
-      <Helmet titleTemplate={`%s | ${siteName}`}>
+      <Helmet titleTemplate={`%s`}>
         <title>{title}</title>
         {description && <meta name="description" content={description} />}
         {(robots === false && (
@@ -19,7 +19,7 @@ const Head = ({ siteName, title, description, robots, children }) => {
 };
 
 Head.defaultProps = {
-  siteName: 'Create React App',
+  siteName: '',
 };
 
 Head.propTypes = {
