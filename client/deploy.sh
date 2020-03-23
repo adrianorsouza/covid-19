@@ -5,7 +5,7 @@ CURRENT_DIR=$PWD
 echo "CURRENT_DIR: ${CURRENT_DIR}"
 
 DATE=$(date +%Y-%m-%dT%H:%M)
-rm -rf /tmp/covid19
+#rm -rf /tmp/covid19
 npm run build
 
 if [[ ! -d /tmp/covid19 ]]; then
