@@ -33,6 +33,7 @@ const CounterCountry = ({ counters: { status, response } }) => {
             value={recovered}
             color="green"
             status={status}
+            rate={recovered && +((recovered / confirmed) * 100).toFixed(1)}
           />
         </Grid>
         <Grid item sm={4} xs={12}>
@@ -41,6 +42,7 @@ const CounterCountry = ({ counters: { status, response } }) => {
             value={deaths}
             color="red"
             status={status}
+            rate={deaths && +((deaths / confirmed) * 100).toFixed(1)}
           />
         </Grid>
       </Grid>

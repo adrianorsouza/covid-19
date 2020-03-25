@@ -43,7 +43,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const BoxCounter = ({ color, value, label, status }) => {
+const BoxCounter = ({ color, value, label, status, rate }) => {
   const classes = useStyles();
 
   return (
@@ -59,7 +59,7 @@ const BoxCounter = ({ color, value, label, status }) => {
             0}
         </h2>
         <Typography className={classes.uppercase}>
-          <strong>{label}</strong>
+          <strong>{label} {(rate && `(${rate}%)`) || ''}</strong>
         </Typography>
       </Box>
     </PaperCustom>

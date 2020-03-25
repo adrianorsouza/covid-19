@@ -26,13 +26,13 @@ const columns = [
   //   align: 'right',
   //   format: value => value.toLocaleString(),
   // },
-  // {
-  //   id: 'deaths',
-  //   label: 'Mortes',
-  //   minWidth: 170,
-  //   align: 'right',
-  //   format: value => value.toLocaleString(),
-  // },
+  {
+    id: 'deaths',
+    label: 'Mortes',
+    minWidth: 170,
+    align: 'right',
+    format: value => value.toLocaleString(),
+  },
 ];
 
 const useStyles = makeStyles({
@@ -92,7 +92,10 @@ const StickyHeadTable = ({ responseCountries }) => {
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row.iso}>
                     {columns.map(column => {
-                      const value = row[column.id];
+                      const value =
+                        (column.id === 'rate' &&
+                          (row.deaths / row.confirmed) * 100) ||
+                        row[column.id];
                       return (
                         <TableCell key={column.id} align={column.align}>
                           {(column.id === 'iso' && (
@@ -103,6 +106,11 @@ const StickyHeadTable = ({ responseCountries }) => {
                               style={{ maxHeight: 30 }}
                             />
                           )) ||
+                            (column.id === 'deaths' &&
+                              `${value} (${(
+                                (value / row.confirmed) *
+                                100
+                              ).toFixed(1)}%)`) ||
                             (column.format && typeof value === 'number'
                               ? column.format(value)
                               : value)}
