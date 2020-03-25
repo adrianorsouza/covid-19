@@ -48,7 +48,7 @@ const SelectCountryAutoComplete = ({country, countries, handleChange}) => {
       renderInput={params => (
         <TextField
           {...params}
-          label="Selecionar País"
+          label="Selecione outro País"
           variant="outlined"
           inputProps={{
             ...params.inputProps,
