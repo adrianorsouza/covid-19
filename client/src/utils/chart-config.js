@@ -57,13 +57,13 @@ export const parseChartData = (data, type) => {
       borderColor: colors.blue,
       fill: false,
     });
-    datasets.push({
-      label: 'Total Recuperados',
-      data: data.map(item => item['totalRecovered']),
-      backgroundColor: colors.green,
-      borderColor: colors.green,
-      fill: false,
-    });
+    // datasets.push({
+    //   label: 'Total Recuperados',
+    //   data: data.map(item => item['totalRecovered']),
+    //   backgroundColor: colors.green,
+    //   borderColor: colors.green,
+    //   fill: false,
+    // });
   }
 
   return {

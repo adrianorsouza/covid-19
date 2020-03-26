@@ -22,6 +22,7 @@ import CounterCountry from './components/CounterCountry';
 import ChartWorldCases from './components/ChartWorldCases';
 import ResponsePending from './components/ResponsePending';
 import TableCountryList from './components/TableCountryList';
+import ChartGloballyCounter from './components/ChartGloballyCounter';
 import SelectCountryAutoComplete from './components/SelectCountryAutoComplete';
 
 const PaperCustom = withStyles(theme => ({
@@ -57,33 +58,37 @@ const ChartWrapper = styled.div`
 
 const Covid = () => {
   const { country, countries, handleCountryChange } = useContext(GlobalContext);
-  const [counters, fetchCounters] = useApiRequest(
-    url.api.counters(country.value)
-  );
-  const [chartDaily, fetchDaily] = useApiRequest('/api/daily.json');
-  const [chartWorld, fetchWorld] = useApiRequest('/api/daily/world.json');
-  const [responseCountries, fetchDataCountries] = useApiRequest(`/api/countries.json`);
+  const [counters, fetchCounters] = useApiRequest();
+  const [chartDaily, fetchDaily] = useApiRequest();
+  const [chartWorld, fetchWorld] = useApiRequest();
+  const [responseCountries, fetchDataCountries] = useApiRequest();
+  const [globally, fetchDataGlobally] = useApiRequest();
 
   if (!counters.status) {
-    fetchCounters();
+    fetchCounters(url.api.counters(country.value));
   }
 
   if (!chartDaily.status) {
-    fetchDaily();
+    fetchDaily(url.api.daily(country.value));
   }
 
   if (!chartWorld.status) {
-    fetchWorld();
+    fetchWorld(url.api.dailyWorld);
   }
 
   if (!responseCountries.status) {
-    fetchDataCountries();
+    fetchDataCountries(url.api.countries);
+  }
+
+  if (!globally.status) {
+    fetchDataGlobally(url.api.globally);
   }
 
   const selectCountry = iso => {
     if (!iso) return;
     handleCountryChange(iso.value);
     fetchCounters(url.api.counters(iso.value));
+    fetchDaily(url.api.daily(iso.value));
   };
 
   return (
@@ -111,7 +116,11 @@ const Covid = () => {
       </PageHeader>
 
       <Box component="div">
-        <SelectCountryAutoComplete country={country} countries={countries} handleChange={selectCountry}/>
+        <SelectCountryAutoComplete
+          country={country}
+          countries={countries}
+          handleChange={selectCountry}
+        />
       </Box>
 
       <Box mt={3}>
@@ -123,34 +132,71 @@ const Covid = () => {
           <Box
             m={0}
             p={{ xs: 1, sm: 2 }}
-            component="h2"
+            component="h3"
             className="text-center"
-            fontSize={{ xs: 'h3.fontSize', sm: 'h2.fontSize' }}
+            fontSize={{ xs: 'h5.fontSize', sm: 'h4.fontSize' }}
           >
-            Evolução dos casos no{' '}
-            {(country.value === 'BR' && `Brasil`) || 'Mundo'}
+            Evolução dos casos - {country.label}
             <ResponsePending status={chartWorld.status || chartDaily.status} />
           </Box>
           <ChartWrapper>
-            {(country.value === 'BR' && (
-              <ChartLineCases chartDaily={chartDaily} />
-            )) || <ChartWorldCases chartWorld={chartWorld} />}
+            <ChartLineCases chartDaily={chartDaily} />
           </ChartWrapper>
         </PaperCustom>
       </Box>
 
+      <PageHeader>
+        <Box
+          m={0}
+          p={{ xs: 1, sm: 2 }}
+          component="h2"
+          className="text-center"
+          fontSize={{ xs: 'h3.fontSize', sm: 'h2.fontSize' }}
+          uppercase={'uppercase'}
+        >
+          Casos Coronavírus no Mundo
+        </Box>
+        <LastUpdated value={globally} />
+      </PageHeader>
+
+      <Box mt={3} mb={3}>
+        <PaperCustom>
+          <ChartGloballyCounter data={globally} />
+        </PaperCustom>
+
+        <PaperCustom>
+          <Box
+            m={0}
+            p={{ xs: 1, sm: 2 }}
+            component="h4"
+            className="text-center"
+            fontSize={{ xs: 'h5.fontSize', sm: 'h4.fontSize' }}
+          >
+            Evolução dos casos no mundo
+            <ResponsePending status={chartWorld.status || chartDaily.status} />
+          </Box>
+          <ChartWrapper>
+            <ChartWorldCases chartWorld={chartWorld} />
+          </ChartWrapper>
+        </PaperCustom>
+      </Box>
+
+      <PageHeader>
+        <Box
+          m={0}
+          p={{ xs: 1, sm: 2 }}
+          component="h2"
+          className="text-center"
+          fontSize={{ xs: 'h3.fontSize', sm: 'h2.fontSize' }}
+          uppercase={'uppercase'}
+        >
+          Países com casos registrados
+        </Box>
+        <LastUpdated value={responseCountries} />
+      </PageHeader>
       <Box mt={3}>
         <PaperCustom elevation={1}>
           <Box className="text-center">
-            <Box
-              m={0}
-              p={{ xs: 1, sm: 2 }}
-              component="h2"
-              fontSize={{ xs: 'h3.fontSize', sm: 'h2.fontSize' }}
-            >
-              Casos ao redor do mundo
-            </Box>
-            <LastUpdated value={responseCountries} />
             <ResponsePending status={responseCountries.status} />
           </Box>
           <ChartWrapper>
@@ -160,16 +206,23 @@ const Covid = () => {
       </Box>
       <Box mt={10} className="text-center">
         <p>
-          Dados oficiais atualizados constantemente de acordo com o sistema de controle de cada país.
+          Dados oficiais atualizados constantemente de acordo com o sistema de
+          controle de cada país.
         </p>
         <p>
           <small>
-            Desenvolvido em NodeJS, React e PHP. Layout e BackEnd Wrapper API por{' '}
-            <a href="https://adrianorosa.com" title="Adriano Rosa" target="_blank" rel="noreferrer noopener">
+            Desenvolvido em NodeJS, React e PHP. Layout e BackEnd Wrapper API
+            por{' '}
+            <a
+              href="https://adrianorosa.com"
+              title="Adriano Rosa"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
               Adriano Rosa
             </a>
-            . Data sources fornecido pela Universidade Johns Hopkins University -
-            Systems Science and Engineering (CSSE), JSON API por{' '}
+            . Data sources fornecido pela Universidade Johns Hopkins University
+            - Systems Science and Engineering (CSSE), JSON API por{' '}
             <a
               href="https://covid19.mathdro.id"
               title="Mohamed"

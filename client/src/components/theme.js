@@ -87,6 +87,15 @@ const theme = createMuiTheme({
     error: {
       main: red.A700,
     },
+    confirmed: {
+      main: blue.A400,
+    },
+    recovered: {
+      main: green.A700,
+    },
+    deaths: {
+      main: red.A700,
+    },
     background: {
       default: `#ffffff`,
     },
