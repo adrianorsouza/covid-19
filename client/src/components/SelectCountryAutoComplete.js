@@ -33,6 +33,7 @@ const SelectCountryAutoComplete = ({country, countries, handleChange}) => {
         option: classes.option,
       }}
       autoHighlight
+      blurOnSelect="touch"
       onChange={(e, value) => handleChange(value)}
       getOptionLabel={option =>
         // `${countryToFlag(option.value)} ${option.label} (${option.value})`
